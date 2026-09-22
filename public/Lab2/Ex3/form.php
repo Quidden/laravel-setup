@@ -1,9 +1,3 @@
-<?php
-    session_start();
-    $login = $_SESSION['login'];
-
-?>
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -14,10 +8,9 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Login: <?= $login ?></h1>
-
-    <form action="index.php" method="post">
-        <input type="submit" name="Logout" value="Logout">
-    </form>
+<form action="server_info.php" method="post">
+    <button type="submit">Show info</button>
+</form>
 </body>
 </html>
+
