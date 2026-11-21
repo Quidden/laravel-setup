@@ -20,15 +20,8 @@ class TaskResource extends JsonResource
             'description' => $this->description,
             'status' => $this->status,
             'due_date' => $this->due_date,
-
-            'project' => new ProjectResource(
-                $this->whenLoaded('project')
-            ),
-
-            'comments' => CommentResource::collection(
-                $this->whenLoaded('comments')
-            ),
-
+            'project_id' => $this->project_id,
+            'comments' => CommentResource::collection($this->whenLoaded('comments')),
             'created_at' => $this->created_at->toDateTimeString(),
         ];
     }

@@ -27,7 +27,7 @@ class Task extends Model
     public function actor(){
         return $this->belongsTo(User::class, 'assigned_to');
     }
-    public function comment(){
+    public function comments(){
         return $this->hasMany(Comment::class);
     }
     public function file_task(){

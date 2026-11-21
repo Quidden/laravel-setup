@@ -2,51 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCommentRequest;
+use App\Models\Comment;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use App\Http\Resources\CommentResource;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Task $task)
     {
-        return response()->json(Task::all());
+        return CommentResource::collection(
+            $task->comments()->get()
+        );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreTaskRequest $request)
+    public function store(StoreCommentRequest $request, Task $task)
     {
-        $task = Task::create($request->validated());
-        return new TaskResource($task);
+        $comment = $task->comments()->create(
+            $request->validated()
+        );
+
+        return (new CommentResource($comment))
+            ->response()
+            ->setStatusCode(201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Task $task)
+    public function show(Comment $comment)
     {
-        return new TaskResource($task);
+        return new CommentResource($comment);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update( UpdateTaskRequest $request, Task $task)
+    public function update(Request $request, Comment $comment)
     {
-        $task->update($request->validated());
-        return new TaskResource($task);
+        $validated = $request->validate([
+            'content' => ['sometimes', 'required', 'string'],
+        ]);
+        $comment->update($validated);
+        return new CommentResource($comment->refresh());
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Task $task)
+    public function destroy(Comment $comment)
     {
-        $task->delete();
+        $comment->delete();
         return response()->noContent();
     }
 }
+
